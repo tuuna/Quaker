@@ -1,4 +1,4 @@
-package com.tuuna.spider.job;
+package com.tuuna.spider.utils;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -6,29 +6,26 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
-class spider {
+public class ConnectSite {
     private static String url = "https://toutiao.io";
-    public static void main(String[]args) throws IOException {
+
+    public List<String> getAllUrls(String uri) throws Exception{
         List<String> url_list = new ArrayList<String>();
 
-        Connection connect = Jsoup.connect(url+"/posts/hot/7");
+        Connection connect = Jsoup.connect(url+ uri);
 
         Document document = connect.get();
-        Elements links = document.getElementsByClass("content");
+        Elements links = document.getElementsByClass("title");
 
         for (Element link : links) {
-//            Elements real_links = link.getElementsByTag("data-url");
-            String linkHref = link.attr("data-url");
+            Elements a = link.getElementsByTag("a");
+            String linkHref = a.attr("href");
             url_list.add(linkHref);
         }
 
-        System.out.println(url_list);
-
+        return url_list;
     }
 }
-
